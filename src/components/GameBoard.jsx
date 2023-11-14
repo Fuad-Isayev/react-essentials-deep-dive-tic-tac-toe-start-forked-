@@ -13,6 +13,8 @@ export default function GameBoard({ onSelect, gameTurns }) {
 
     gameBoard[row][col] = player;
   }
+  console.log(gameBoard);
+  console.log(gameTurns);
 
   return (
     <ol id="game-board">
