@@ -5,11 +5,14 @@ const initialBoard = [
 ];
 
 export default function GameBoard({ onSelect, gameTurns }) {
-  // const [gameBoard, setGameBoard] = React.useState(initialBoard);
   let gameBoard = initialBoard;
-  gameTurns.forEach(
-    (turn) => (gameBoard[turn.position.x][turn.position.y] = turn.symbol),
-  );
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
 
   return (
     <ol id="game-board">
@@ -18,7 +21,10 @@ export default function GameBoard({ onSelect, gameTurns }) {
           <ol>
             {row.map((symbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => onSelect(rowIndex, colIndex)}>
+                <button
+                  onClick={() => onSelect(rowIndex, colIndex)}
+                  disabled={symbol}
+                >
                   {symbol}
                 </button>
               </li>
