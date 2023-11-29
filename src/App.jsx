@@ -73,7 +73,7 @@ function App() {
           <Player isActive={activePlayer === "X"} name="Player1" symbol="X" />
           <Player isActive={activePlayer === "O"} name="Player2" symbol="O" />
         </ol>
-        {winner && "Tepesi " + winner}
+        {winner && "You won " + winner}
         <GameBoard
           activePlayer={activePlayer}
           board={gameBoard}
