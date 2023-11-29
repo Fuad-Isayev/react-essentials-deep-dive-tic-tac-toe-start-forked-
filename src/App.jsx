@@ -6,7 +6,12 @@ import Log from "./components/Log";
 import GameOver from "./components/GameOver";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 
-const initialBoard = [
+const PLAYERS = {
+  X: "Player 1",
+  O: "Player 2",
+};
+
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -20,13 +25,8 @@ const deriveActivePlayer = (gameTurns) => {
   return currentPlayer;
 };
 
-function App() {
-  const [gameTurns, setGameTurns] = React.useState([]);
-  const [players, setPlayers] = React.useState({
-    X: "Player 1",
-    O: "Player 2",
-  });
-  let gameBoard = [...initialBoard.map((array) => [...array])];
+const deriveGameBoard = (gameTurns) => {
+  let gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
 
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -34,10 +34,11 @@ function App() {
 
     gameBoard[row][col] = player;
   }
-  const activePlayer = deriveActivePlayer(gameTurns);
+  return gameBoard;
+};
 
+const deriveWinner = (gameBoard, players) => {
   let winner = null;
-  let hasDraw = false;
 
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
@@ -47,9 +48,6 @@ function App() {
     const thirdSquareSymbol =
       gameBoard[combination[2].row][combination[2].column];
 
-    if (gameTurns.length === 9 && !winner) {
-      hasDraw = true;
-    }
     if (
       firstSquareSymbol &&
       firstSquareSymbol === secondSquareSymbol &&
@@ -58,6 +56,17 @@ function App() {
       winner = players[firstSquareSymbol];
     }
   }
+  return winner;
+};
+
+function App() {
+  const [gameTurns, setGameTurns] = React.useState([]);
+  const [players, setPlayers] = React.useState(PLAYERS);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+  const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);
+  let hasDraw = gameTurns.length === 9 && !winner;
 
   const handleSelectSquare = (rowIndex, colIndex) => {
     setGameTurns((prevTurns) => {
@@ -95,13 +104,13 @@ function App() {
         <ol id="players" className="highlight-player">
           <Player
             isActive={activePlayer === "X"}
-            name="Player1"
+            name={PLAYERS.X}
             symbol="X"
             onNameChange={handleNameChange}
           />
           <Player
             isActive={activePlayer === "O"}
-            name="Player2"
+            name={PLAYERS.O}
             symbol="O"
             onNameChange={handleNameChange}
           />
