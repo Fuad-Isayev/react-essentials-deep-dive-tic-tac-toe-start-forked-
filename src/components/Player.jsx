@@ -1,11 +1,14 @@
 import React from "react";
 
-export default function Player({ name, symbol, isActive }) {
+export default function Player({ name, symbol, isActive, onNameChange }) {
   const [isEditing, setIsediting] = React.useState(false);
   const [playerName, setPlayerName] = React.useState(name);
 
   const toggleIsEditing = () => {
     setIsediting((prev) => !prev);
+    if (isEditing) {
+      onNameChange(symbol, playerName);
+    }
   };
 
   const handleNameChange = (event) => {
